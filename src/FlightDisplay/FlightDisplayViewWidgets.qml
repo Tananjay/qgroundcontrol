@@ -27,6 +27,7 @@ Item {
 
     property alias  guidedModeBar:      _guidedModeBar
     property bool   gotoEnabled:        _activeVehicle && _activeVehicle.guidedMode && _activeVehicle.flying
+    property bool   orbitEnabled:        _activeVehicle && _activeVehicle.flightMode == "Position" && _activeVehicle.flying
     property var    qgcView
     property bool   isBackgroundDark
 
@@ -235,10 +236,7 @@ Item {
                 _activeVehicle.setCurrentMissionSequence(_flightMap._retaskSequence)
                 break;
             case confirmOrbit:
-                //-- All parameters controlled by RC
-                _activeVehicle.guidedModeOrbit()
-                //-- Center on current flight map position and orbit with a 50m radius (velocity/direction controlled by the RC)
-                //_activeVehicle.guidedModeOrbit(QGroundControl.flightMapPosition, 50.0)
+                _activeVehicle.guidedModeOrbit(_flightMap._orbitCoordinate, 20.0)
                 break;
             default:
                 console.warn(qsTr("Internal error: unknown confirmActionCode"), confirmActionCode)
@@ -307,7 +305,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color:      _lightWidgetBorders ? qgcPal.mapWidgetBorderDark : qgcPal.mapWidgetBorderLight
                 text:       "Click in map to move vehicle"
-                visible:    gotoEnabled
+                visible:    gotoEnabled || orbitEnabled
             }
 
             Row {

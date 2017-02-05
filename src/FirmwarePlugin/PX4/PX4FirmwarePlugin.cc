@@ -305,9 +305,6 @@ void PX4FirmwarePlugin::guidedModeLand(Vehicle* vehicle)
 
 void PX4FirmwarePlugin::guidedModeOrbit(Vehicle* vehicle, const QGeoCoordinate& centerCoord, double radius, double velocity, double altitude)
 {
-    if (!isGuidedMode(vehicle)) {
-        setGuidedMode(vehicle, true);
-    }
 
     vehicle->sendMavCommand(vehicle->defaultComponentId(),
                             MAV_CMD_SET_GUIDED_SUBMODE_CIRCLE,

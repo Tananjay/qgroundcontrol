@@ -79,10 +79,8 @@ Rectangle {
             activeVehicle.setCurrentMissionSequence(_flightMap._retaskSequence)
             break;
         case confirmOrbit:
-            //-- All parameters controlled by RC
-            activeVehicle.guidedModeOrbit()
-            //-- Center on current flight map position and orbit with a 50m radius (velocity/direction controlled by the RC)
-            //activeVehicle.guidedModeOrbit(QGroundControl.flightMapPosition, 50.0)
+            //-- Center on current flight map position and orbit with a 20m radius (velocity/direction controlled by the RC)
+            activeVehicle.guidedModeOrbit(_flightMap._orbitCoordinate, 20.0)
             break;
         default:
             console.warn(qsTr("Internal error: unknown _confirmActionCode"), _confirmActionCode)

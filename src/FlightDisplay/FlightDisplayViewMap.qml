@@ -36,6 +36,7 @@ FlightMap {
     property bool   _activeVehicleCoordinateValid:  _activeVehicle ? _activeVehicle.coordinateValid : false
     property var    activeVehicleCoordinate:        _activeVehicle ? _activeVehicle.coordinate : QtPositioning.coordinate()
     property var    _gotoHereCoordinate:            QtPositioning.coordinate()
+    property var    _orbitCoordinate:            QtPositioning.coordinate()
     property int    _retaskSequence:                0
     property real   _toolButtonTopMargin:           parent.height - ScreenTools.availableHeight + (ScreenTools.defaultFontPixelHeight / 2)
 
@@ -310,7 +311,21 @@ FlightMap {
             checked: true
             label:   qsTr("G", "Goto here waypoint") // second string is translator's hint.
         }
-    }    
+    }
+
+    // Orbit here waypoint
+    MapQuickItem {
+        coordinate:     _orbitCoordinate
+        visible:        _activeVehicle && _activeVehicle.flightMode == "Position" && _orbitCoordinate.isValid
+        z:              QGroundControl.zOrderMapItems
+        anchorPoint.x:  sourceItem.width  / 2
+        anchorPoint.y:  sourceItem.height / 2
+
+        sourceItem: MissionItemIndexLabel {
+            checked: true
+            label:   qsTr("O", "Orbit waypoint")
+        }
+    }
 
     MapScale {
         anchors.bottomMargin:   ScreenTools.defaultFontPixelHeight * (0.66)
@@ -333,6 +348,9 @@ FlightMap {
                     if (flightWidgets.gotoEnabled) {
                         _gotoHereCoordinate = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y))
                         flightWidgets.guidedModeBar.confirmAction(flightWidgets.guidedModeBar.confirmGoTo)
+                    } else if (flightWidgets.orbitEnabled) {
+                        _orbitCoordinate = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y))
+                        flightWidgets.guidedModeBar.confirmAction(flightWidgets.guidedModeBar.confirmOrbit)
                     }
                 }
             }
